@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alzu Sharma | Educator • Explorer • Visionary Learner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.11.4/dist/ScrollTrigger.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --primary: #6c63ff;
+            --secondary: #ff6584;
+            --dark: #1a1a2e;
+            --light: #f5f5f7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+        
+        /* 3D Card Effect */
+        .card-3d {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            perspective: 1000px;
+        }
+        
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(10deg) rotateX(5deg) translateY(-10px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Glassmorphism Effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Floating Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Enhanced Text Effects */
+        .text-3d {
+            text-shadow: 0 0 10px rgba(255,255,255,0.5), 
+                         0 0 20px rgba(255,255,255,0.3),
+                         0 0 30px rgba(255,255,255,0.2);
+            transition: all 0.5s ease;
+        }
+        
+        .text-3d:hover {
+            transform: perspective(500px) translateZ(20px) rotateY(5deg) rotateX(5deg);
+            text-shadow: 0 0 15px rgba(255,255,255,0.7),
+                         0 0 25px rgba(255,255,255,0.5),
+                         0 0 35px rgba(255,255,255,0.3);
+        }
+
+        .hover-text-shadow-lg {
+            text-shadow: 0 0 10px rgba(255,255,255,0.5), 
+                         0 0 20px rgba(255,255,255,0.3),
+                         0 0 30px rgba(255,255,255,0.2);
+        }
+        
+        .hover-text-shadow-xl {
+            text-shadow: 0 0 15px rgba(255,255,255,0.7),
+                         0 0 25px rgba(255,255,255,0.5),
+                         0 0 35px rgba(255,255,255,0.3);
+        }
+        
+        .text-gradient-animate {
+            background-size: 200% auto;
+            animation: gradientText 3s ease infinite;
+        }
+        
+        @keyframes gradientText {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+
+        /* Glowing Text */
+        .glow {
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .glow:hover {
+            text-shadow: 0 0 20px rgba(255, 101, 132, 0.8);
+        }
+        
+        /* Particle Canvas */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        /* Profile Image */
+        .profile-img {
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(108, 99, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(108, 99, 255, 0.8);
+        }
+        
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-left: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .timeline-item:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.8);
+        }
+        
+        /* Photo Gallery */
+        .gallery-item {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05) rotateY(5deg) rotateX(5deg);
+            z-index: 10;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Contact Form */
+        .contact-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .contact-input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(108, 99, 255, 0.3);
+        }
+        
+        /* Social Icons */
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-5px) scale(1.1);
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(108, 99, 255, 0.8);
+        }
+        
+        /* Navigation */
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        .nav-link.active:after {
+            width: 100%;
+        }
+        
+        /* Modal */
+        .modal {
+            transition: all 0.3s ease;
+            transform: scale(0.9);
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .modal.active {
+            transform: scale(1);
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-img-container {
+                margin-bottom: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass py-4 px-6 shadow-lg transform transition-all duration-500 hover:rotate-x-3 hover:rotate-y-3 hover:translate-z-10" style="transform-style: preserve-3d;">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-3d hover:text-purple-400 transition-all duration-300">ALZU SHARMA</a>
+            
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link active hover:text-purple-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Home</a>
+                <a href="#about" class="nav-link hover:text-blue-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">About Me</a>
+                <a href="#journey" class="nav-link hover:text-pink-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">My Journey</a>
+                <a href="#education" class="nav-link hover:text-green-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Education</a>
+                <a href="#gallery" class="nav-link hover:text-yellow-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Gallery</a>
+                <a href="#contact" class="nav-link hover:text-red-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Contact</a>
+            </div>
+            
+            <button id="mobile-menu-button" class="md:hidden text-xl">
+                <i class="fas fa-bars hover:text-purple-400 hover:rotate-90 hover:scale-125 transition-all duration-300"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-gray-900 bg-opacity-95 py-4 px-6">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="nav-link active hover:text-purple-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Home</a>
+                <a href="#about" class="nav-link hover:text-blue-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">About Me</a>
+                <a href="#journey" class="nav-link hover:text-pink-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">My Journey</a>
+                <a href="#education" class="nav-link hover:text-green-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Education</a>
+                <a href="#gallery" class="nav-link hover:text-yellow-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Gallery</a>
+                <a href="#contact" class="nav-link hover:text-red-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Contact</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        <div class="max-w-7xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center justify-between">
+            <div class="hero-content flex flex-col md:flex-row items-center w-full">
+                <div class="profile-img-container mb-10 md:mb-0 md:mr-10">
+                    <div class="relative w-64 h-64 rounded-full overflow-hidden border-4 border-white border-opacity-20 profile-img floating transform rotate-6 hover:rotate-12 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Alzu Sharma" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30"></div>
+                    </div>
+                </div>
+                
+                <div class="text-center md:text-left max-w-2xl">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 transform transition-all duration-500 hover:scale-105 hover:rotate-1 hover:skew-y-2 hover:text-shadow-lg hover:bg-gradient-to-l">Alzu Sharma</h1>
+                    <div class="text-xl md:text-2xl mb-6">
+                        <span class="typing-text text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 transform transition-all duration-300 hover:scale-110 hover:rotate-1 hover:skew-x-3"></span>
+                    </div>
+                    <p class="text-lg mb-8 text-gray-300">Passionate educator with a vision to inspire and transform lives through learning.</p>
+                    
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                        <button class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-medium hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-envelope mr-2"></i> Hire Me
+                        </button>
+                        <button class="px-6 py-3 glass rounded-full font-medium hover:bg-opacity-30 transition-all transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-download mr-2"></i> Download CV
+                        </button>
+                        <button onclick="scrollToSection('journey')" class="px-6 py-3 glass rounded-full font-medium hover:bg-opacity-30 transition-all transform hover:scale-105 shadow-lg">
+                            <i class="fas fa-compass mr-2"></i> Explore Journey
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="absolute bottom-10 left-0 right-0 flex justify-center">
+            <a href="#about" class="text-3xl animate-bounce hover:text-purple-400 hover:scale-125 transition-transform duration-300">
+                <i class="fas fa-chevron-down"></i>
+            </a>
+        </div>
+    </section>
+    
+    <!-- About Me Section -->
+    <section id="about" class="py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 transform transition-all duration-500 hover:scale-110 hover:rotate-1 hover:skew-y-3 hover:text-shadow-xl">About Me</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="card-3d glass p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Who Am I?</h3>
+                    <p class="text-lg mb-6">I am a very passionate girl with an insatiable curiosity about the world around me. As an educator, I believe in the transformative power of learning and the profound impact a teacher can have on shaping young minds.</p>
+                    <p class="text-lg mb-6">My journey has been one of continuous growth, exploration, and self-discovery. I see teaching not just as a profession, but as a calling to inspire and nurture the next generation of thinkers and leaders.</p>
+                    <p class="text-lg">"A teacher not only teaches but builds the future." This philosophy guides everything I do in my professional and personal life.</p>
+                </div>
+                
+                <div>
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold mb-4">My Passions</h3>
+                        <div class="flex flex-wrap gap-3">
+                            <span class="px-4 py-2 glass rounded-full hover:bg-gradient-to-r from-purple-600 to-blue-500 hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">Teaching</span>
+                            <span class="px-4 py-2 glass rounded-full hover:bg-gradient-to-r from-pink-600 to-red-500 hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">Learning</span>
+                            <span class="px-4 py-2 glass rounded-full hover:bg-gradient-to-r from-green-600 to-teal-500 hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">Child Development</span>
+                            <span class="px-4 py-2 glass rounded-full hover:bg-gradient-to-r from-yellow-600 to-orange-500 hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">Montessori Methods</span>
+                            <span class="px-4 py-2 glass rounded-full hover:bg-gradient-to-r from-indigo-600 to-purple-500 hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">Creative Education</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">My Hobbies</h3>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="hobby-card glass p-4 rounded-xl text-center transform transition-all duration-500 hover:rotate-y-180 hover:scale-110 hover:shadow-2xl" style="transform-style: preserve-3d;">
+                                <div class="text-3xl mb-2 text-purple-400 transition-all duration-500 hover:text-white hover:rotate-12 hover:scale-125">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <p class="transition-all duration-500 hover:text-white">Studying</p>
+                                <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-500 opacity-0 rounded-xl transition-opacity duration-500 hover:opacity-100 -z-10" style="transform: translateZ(-1px);"></div>
+                            </div>
+                            <div class="hobby-card glass p-4 rounded-xl text-center transform transition-all duration-500 hover:rotate-y-180 hover:scale-110 hover:shadow-2xl" style="transform-style: preserve-3d;">
+                                <div class="text-3xl mb-2 text-blue-400 transition-all duration-500 hover:text-white hover:rotate-12 hover:scale-125">
+                                    <i class="fas fa-globe-asia"></i>
+                                </div>
+                                <p class="transition-all duration-500 hover:text-white">World Tour</p>
+                                <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-teal-500 opacity-0 rounded-xl transition-opacity duration-500 hover:opacity-100 -z-10" style="transform: translateZ(-1px);"></div>
+                            </div>
+                            <div class="hobby-card glass p-4 rounded-xl text-center transform transition-all duration-500 hover:rotate-y-180 hover:scale-110 hover:shadow-2xl" style="transform-style: preserve-3d;">
+                                <div class="text-3xl mb-2 text-green-400 transition-all duration-500 hover:text-white hover:rotate-12 hover:scale-125">
+                                    <i class="fas fa-hiking"></i>
+                                </div>
+                                <p class="transition-all duration-500 hover:text-white">Trekking</p>
+                                <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-emerald-500 opacity-0 rounded-xl transition-opacity duration-500 hover:opacity-100 -z-10" style="transform: translateZ(-1px);"></div>
+                            </div>
+                            <div class="hobby-card glass p-4 rounded-xl text-center transform transition-all duration-500 hover:rotate-y-180 hover:scale-110 hover:shadow-2xl" style="transform-style: preserve-3d;">
+                                <div class="text-3xl mb-2 text-yellow-400 transition-all duration-500 hover:text-white hover:rotate-12 hover:scale-125">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                                <p class="transition-all duration-500 hover:text-white">Photography</p>
+                                <div class="absolute inset-0 bg-gradient-to-br from-yellow-600 to-orange-500 opacity-0 rounded-xl transition-opacity duration-500 hover:opacity-100 -z-10" style="transform: translateZ(-1px);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- My Journey Section -->
+    <section id="journey" class="py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-3d hover:scale-105">My Journey</h2>
+            
+            <div class="relative">
+                <div class="absolute left-1/2 top-0 h-full w-1 bg-gradient-to-b from-purple-500 to-blue-500 transform -translate-x-1/2"></div>
+                
+                <div class="space-y-12">
+                    <!-- Journey Item 1 -->
+                    <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right md:pr-8 mb-6 md:mb-0">
+                            <div class="inline-block glass p-6 rounded-2xl">
+                                <h3 class="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Early Inspiration</h3>
+                                <p class="text-gray-300">My passion for teaching began early, inspired by my own teachers who saw potential in me that I didn't yet see in myself.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block h-6 w-6 rounded-full bg-purple-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
+                        
+                        <div class="md:pl-8">
+                            <div class="glass p-6 rounded-2xl">
+                                <div class="text-4xl text-purple-400 mb-4">
+                                    <i class="fas fa-seedling"></i>
+                                </div>
+                                <p class="text-gray-300">"Every child is a seed waiting to blossom. As educators, we provide the sunlight, water, and nourishment for that growth."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Journey Item 2 -->
+                    <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right md:pr-8 mb-6 md:mb-0">
+                            <div class="inline-block glass p-6 rounded-2xl">
+                                <h3 class="text-2xl font-bold mb-2">Formal Education</h3>
+                                <p class="text-gray-300">Pursued my academic journey with dedication, completing my SEE, +2 Science, and BBS while developing my teaching philosophy.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block h-6 w-6 rounded-full bg-blue-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
+                        
+                        <div class="md:pl-8">
+                            <div class="glass p-6 rounded-2xl">
+                                <div class="text-4xl text-blue-400 mb-4">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <p class="text-gray-300">"Education is not just about acquiring knowledge, but about learning how to think, question, and understand the world."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Journey Item 3 -->
+                    <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right md:pr-8 mb-6 md:mb-0">
+                            <div class="inline-block glass p-6 rounded-2xl">
+                                <h3 class="text-2xl font-bold mb-2">Montessori Training</h3>
+                                <p class="text-gray-300">Completed comprehensive Montessori training at Excellence Montessori, mastering child-centered educational approaches.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block h-6 w-6 rounded-full bg-green-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
+                        
+                        <div class="md:pl-8">
+                            <div class="glass p-6 rounded-2xl">
+                                <div class="text-4xl text-green-400 mb-4">
+                                    <i class="fas fa-child"></i>
+                                </div>
+                                <p class="text-gray-300">"The Montessori method showed me that education should follow the child's natural development, not force the child to follow rigid systems."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Journey Item 4 -->
+                    <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right md:pr-8 mb-6 md:mb-0">
+                            <div class="inline-block glass p-6 rounded-2xl">
+                                <h3 class="text-2xl font-bold mb-2">Teaching Experience</h3>
+                                <p class="text-gray-300">Applied my knowledge and training in real classroom settings, discovering the joys and challenges of guiding young minds.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block h-6 w-6 rounded-full bg-yellow-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
+                        
+                        <div class="md:pl-8">
+                            <div class="glass p-6 rounded-2xl">
+                                <div class="text-4xl text-yellow-400 mb-4">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <p class="text-gray-300">"Every day in the classroom is an opportunity to make a difference. The light in a child's eyes when they understand something new is my greatest reward."</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Journey Item 5 -->
+                    <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
+                        <div class="md:text-right md:pr-8 mb-6 md:mb-0">
+                            <div class="inline-block glass p-6 rounded-2xl">
+                                <h3 class="text-2xl font-bold mb-2">Future Vision</h3>
+                                <p class="text-gray-300">Continuing to grow as an educator while exploring innovative teaching methods and expanding my impact.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="hidden md:block h-6 w-6 rounded-full bg-pink-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
+                        
+                        <div class="md:pl-8">
+                            <div class="glass p-6 rounded-2xl">
+                                <div class="text-4xl text-pink-400 mb-4">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
+                                <p class="text-gray-300">"I believe learning never ends. My journey continues as I seek new ways to inspire and be inspired, to teach and to learn."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Education Section -->
+    <section id="education" class="py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-3d hover:scale-105">My Education</h2>
+            
+            <div class="relative">
+                <!-- Timeline -->
+                <div class="space-y-12">
+                    <!-- SEE -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="card-3d glass p-8 rounded-2xl">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">SEE</h3>
+                                <span class="text-purple-300">Pashupati Vidhya Asharam</span>
+                            </div>
+                            <p class="text-gray-300">Completed my School Leaving Certificate with distinction, laying the foundation for my academic journey.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- +2 Science -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="card-3d glass p-8 rounded-2xl">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500">+2 Science</h3>
+                                <span class="text-blue-300">Padmodaya Public Model School</span>
+                            </div>
+                            <p class="text-gray-300">Pursued science stream with focus on biology, developing analytical thinking and problem-solving skills.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- BBS -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="card-3d glass p-8 rounded-2xl">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-500">Bachelor of Business Studies (BBS)</h3>
+                                <span class="text-green-300">Mahendra Multiple Campus</span>
+                            </div>
+                            <p class="text-gray-300">Gained comprehensive understanding of business principles while nurturing my passion for education.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Montessori Training -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="card-3d glass p-8 rounded-2xl">
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                                <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Montessori Training</h3>
+                                <span class="text-yellow-300">Excellence Montessori</span>
+                            </div>
+                            <p class="text-gray-300">Completed intensive training in Montessori methods, specializing in early childhood education and child development.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills -->
+                <div class="mt-20">
+                    <h3 class="text-3xl font-bold mb-8 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">My Teaching Skills</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="card-3d glass p-6 rounded-xl">
+                            <div class="text-5xl mb-4 bg-gradient-to-br from-purple-600 to-pink-500 text-white p-4 rounded-full inline-flex items-center justify-center h-20 w-20">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1 hover:skew-y-3">Child Development</h4>
+                            <p class="text-gray-300">Deep understanding of cognitive, emotional, and social development in children.</p>
+                        </div>
+                        
+                        <div class="card-3d glass p-6 rounded-xl">
+                            <div class="text-5xl mb-4 bg-gradient-to-br from-blue-600 to-cyan-400 text-white p-4 rounded-full inline-flex items-center justify-center h-20 w-20">
+                                <i class="fas fa-hands-helping"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2">Montessori Methods</h4>
+                            <p class="text-gray-300">Expertise in hands-on learning, self-directed activity, and collaborative play.</p>
+                        </div>
+                        
+                        <div class="card-3d glass p-6 rounded-xl">
+                            <div class="text-5xl mb-4 bg-gradient-to-br from-green-600 to-emerald-400 text-white p-4 rounded-full inline-flex items-center justify-center h-20 w-20">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2">Communication</h4>
+                            <p class="text-gray-300">Ability to explain complex concepts in simple, engaging ways for young minds.</p>
+                        </div>
+                        
+                        <div class="card-3d glass p-6 rounded-xl">
+                            <div class="text-5xl mb-4 bg-gradient-to-br from-yellow-500 to-orange-400 text-white p-4 rounded-full inline-flex items-center justify-center h-20 w-20">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2">Creative Teaching</h4>
+                            <p class="text-gray-300">Developing innovative lesson plans that make learning fun and memorable.</p>
+                        </div>
+                        
+                        <div class="card-3d glass p-6 rounded-xl">
+                            <div class="text-5xl mb-4 bg-gradient-to-br from-pink-500 to-red-400 text-white p-4 rounded-full inline-flex items-center justify-center h-20 w-20">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2">Patience & Empathy</h4>
+                            <p class="text-gray-300">Creating a safe, nurturing environment where every child feels valued.</p>
+                        </div>
+                        
+                        <div class="card-3d glass p-6 rounded-xl">
+                            <div class="text-5xl mb-4 bg-gradient-to-br from-red-600 to-orange-500 text-white p-4 rounded-full inline-flex items-center justify-center h-20 w-20">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2">Classroom Management</h4>
+                            <p class="text-gray-300">Maintaining positive learning environments while encouraging individuality.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Gallery Section -->
+    <section id="gallery" class="py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-3d hover:scale-105">My Gallery</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Gallery Item 1 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Teaching" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">In the Classroom</h3>
+                        <p class="text-sm text-gray-300">Engaging with students</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 2 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80" alt="Montessori" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Montessori Materials</h3>
+                        <p class="text-sm text-gray-300">Hands-on learning tools</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 3 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Graduation" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Graduation Day</h3>
+                        <p class="text-sm text-gray-300">Celebrating achievements</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 4 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Travel" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Exploring Nature</h3>
+                        <p class="text-sm text-gray-300">Trekking adventures</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 5 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1517486808906-6ca8b3f8e1c1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1497&q=80" alt="Study" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Learning Moments</h3>
+                        <p class="text-sm text-gray-300">Continuous self-improvement</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 6 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Workshop" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Professional Development</h3>
+                        <p class="text-sm text-gray-300">Attending education workshops</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 7 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="Students" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Student Projects</h3>
+                        <p class="text-sm text-gray-300">Celebrating creativity</p>
+                    </div>
+                </div>
+                
+                <!-- Gallery Item 8 -->
+                <div class="gallery-item rounded-xl overflow-hidden glass">
+                    <img src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Future" class="w-full h-64 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold">Looking Ahead</h3>
+                        <p class="text-sm text-gray-300">Planning the next chapter</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-3d hover:scale-105">Get In Touch</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="card-3d glass p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1 hover:skew-y-3">Contact Information</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="text-4xl mr-4 bg-gradient-to-br from-purple-500 to-pink-500 text-white p-3 rounded-full hover:rotate-12 hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-envelope hover:text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Email</h4>
+                                <a href="mailto:sharmayalzu68@gmail.com" class="text-gray-300 hover:text-white transition">sharmayalzu68@gmail.com</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-4xl mr-4 bg-gradient-to-br from-blue-500 to-teal-400 text-white p-3 rounded-full hover:rotate-12 hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-phone hover:text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500">Phone</h4>
+                                <a href="tel:+9779822817191" class="text-gray-300 hover:text-white transition">+977 9822817191</a>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="text-4xl mr-4 bg-gradient-to-br from-green-500 to-emerald-400 text-white p-3 rounded-full hover:rotate-12 hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-map-marker-alt hover:text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500">Location</h4>
+                                <p class="text-gray-300">Kathmandu, Nepal</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-10">
+                        <h4 class="font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Connect With Me</h4>
+                        <div class="flex space-x-6">
+                            <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                                <i class="fab fa-facebook hover:text-white"></i>
+                            </a>
+                            <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                                <i class="fab fa-twitter hover:text-white"></i>
+                            </a>
+                            <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                                <i class="fab fa-instagram hover:text-white"></i>
+                            </a>
+                            <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                                <i class="fab fa-linkedin hover:text-white"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-3d glass p-8 rounded-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Send Me a Message</h3>
+                    
+                    <form id="contact-form" class="space-y-6">
+                        <div>
+                            <label for="name" class="block mb-2">Your Name</label>
+                            <input type="text" id="name" class="w-full contact-input px-4 py-3 rounded-lg" required>
+                        </div>
+                        
+                        <div>
+                            <label for="email" class="block mb-2">Your Email</label>
+                            <input type="email" id="email" class="w-full contact-input px-4 py-3 rounded-lg" required>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block mb-2">Your Message</label>
+                            <textarea id="message" rows="5" class="w-full contact-input px-4 py-3 rounded-lg" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg font-medium hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg w-full">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="py-12 relative overflow-hidden glass mt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="flex justify-center space-x-8 mb-8">
+                <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                    <i class="fab fa-facebook hover:text-white"></i>
+                </a>
+                <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                    <i class="fab fa-twitter hover:text-white"></i>
+                </a>
+                <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                    <i class="fab fa-instagram hover:text-white"></i>
+                </a>
+                <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-blue-700 to-blue-500 hover:from-blue-800 hover:to-blue-600 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+                    <i class="fab fa-linkedin hover:text-white"></i>
+                </a>
+            </div>
+            
+            <p class="mb-6 text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-yellow-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1 hover:skew-y-3">"Education is the most powerful weapon which you can use to change the world." - Nelson Mandela</p>
+            
+            <p class="text-gray-400">© 2023 Alzu Sharma. All rights reserved.</p>
+            
+            <a href="#home" class="mt-8 inline-block px-6 py-2 glass rounded-full hover:bg-opacity-30 transition">
+                <i class="fas fa-arrow-up mr-2"></i> Back to Top
+            </a>
+        </div>
+    </footer>
+    
+    <!-- Contact Modal -->
+    <div id="contact-modal" class="modal fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
+        <div class="glass p-8 rounded-2xl max-w-md w-full relative">
+            <button id="close-modal" class="absolute top-4 right-4 text-2xl hover:text-red-500 hover:rotate-90 transition-transform duration-300">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <h3 class="text-2xl font-bold mb-6">Let's Work Together</h3>
+            
+            <form class="space-y-4">
+                <div>
+                    <label for="modal-name" class="block mb-2">Your Name</label>
+                    <input type="text" id="modal-name" class="w-full contact-input px-4 py-2 rounded-lg">
+                </div>
+                
+                <div>
+                    <label for="modal-email" class="block mb-2">Your Email</label>
+                    <input type="email" id="modal-email" class="w-full contact-input px-4 py-2 rounded-lg">
+                </div>
+                
+                <div>
+                    <label for="modal-project" class="block mb-2">Project Details</label>
+                    <textarea id="modal-project" rows="4" class="w-full contact-input px-4 py-2 rounded-lg"></textarea>
+                </div>
+                
+                <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg font-medium hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg w-full">
+                    Submit Inquiry
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js
+        document.addEventListener('DOMContentLoaded', function() {
+            // Typing Animation
+            const typingText = document.querySelector('.typing-text');
+            const professions = ["Educator", "Explorer", "Visionary Learner", "Montessori Teacher", "Lifelong Student"];
+            let professionIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            
+            function type() {
+                const currentProfession = professions[professionIndex];
+                
+                if (isDeleting) {
+                    typingText.textContent = currentProfession.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typingText.textContent = currentProfession.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+                
+                if (!isDeleting && charIndex === currentProfession.length) {
+                    isDeleting = true;
+                    setTimeout(type, 2000);
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    professionIndex = (professionIndex + 1) % professions.length;
+                    setTimeout(type, 500);
+                } else {
+                    const typingSpeed = isDeleting ? 100 : 150;
+                    setTimeout(type, typingSpeed);
+                }
+            }
+            
+            setTimeout(type, 1000);
+            
+            // Mobile Menu Toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Close mobile menu when clicking a link
+            document.querySelectorAll('#mobile-menu .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            // Modal Handling
+            const contactModal = document.getElementById('contact-modal');
+            const closeModal = document.getElementById('close-modal');
+            
+            document.querySelectorAll('button').forEach(button => {
+                if (button.textContent.includes('Hire Me')) {
+                    button.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        contactModal.classList.add('active');
+                    });
+                }
+            });
+            
+            closeModal.addEventListener('click', function() {
+                contactModal.classList.remove('active');
+            });
+            
+            // Close modal when clicking outside
+            contactModal.addEventListener('click', function(e) {
+                if (e.target === contactModal) {
+                    contactModal.classList.remove('active');
+                }
+            });
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Scroll to section function
+            window.scrollToSection = function(sectionId) {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    window.scrollTo({
+                        top: section.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+            
+            // Active navigation link based on scroll position
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', function() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (pageYOffset >= (sectionTop - 150)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            // Initialize particles.js
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#6c63ff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#6c63ff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 2,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 140,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+            
+            // GSAP Animations
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Animate sections on scroll
+            gsap.utils.toArray('section').forEach(section => {
+                gsap.from(section, {
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 0,
+                    y: 50,
+                    duration: 1
+                });
+            });
+            
+            // Animate journey items
+            gsap.utils.toArray('.journey-item').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 0,
+                    x: i % 2 === 0 ? -50 : 50,
+                    duration: 0.8,
+                    delay: i * 0.1
+                });
+            });
+            
+            // Animate timeline items
+            gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: i * 0.1
+                });
+            });
+            
+            // Animate gallery items
+            gsap.utils.toArray('.gallery-item').forEach((item, i) => {
+                gsap.from(item, {
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 80%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 0,
+                    scale: 0.8,
+                    duration: 0.5,
+                    delay: i * 0.05
+                });
+            });
+            
+            // 3D card tilt effect
+            document.querySelectorAll('.card-3d').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const angleX = (y - centerY) / 20;
+                    const angleY = (centerX - x) / 20;
+                    
+                    card.style.transform = `rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'rotateX(0) rotateY(0)';
+                });
+            });
+            
+            // Contact form submission
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const message = document.getElementById('message').value;
+                    
+                    // Here you would typically send the form data to a server
+                    // For this example, we'll just show an alert
+                    alert(`Thank you, ${name}! Your message has been sent. I'll get back to you soon.`);
+                    
+                    // Reset form
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
