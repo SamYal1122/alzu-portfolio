@@ -12,6 +12,28 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
         
+        /* Enhanced Mouse Follow Animation */
+        .mouse-follow {
+            will-change: transform, filter;
+            transform-style: preserve-3d;
+            transition: 
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.4s ease;
+            filter: hue-rotate(var(--hue-rotate));
+        }
+        
+        /* Smooth transitions for child elements */
+        .mouse-follow * {
+            transition: 
+                transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.3s ease;
+        }
+        
+        .mouse-follow:hover {
+            filter: drop-shadow(0 0 8px rgba(108, 99, 255, 0.6));
+            z-index: 10;
+        }
+        
         :root {
             --primary: #6c63ff;
             --secondary: #ff6584;
@@ -50,13 +72,15 @@
         /* 3D Card Effect */
         .card-3d {
             transform-style: preserve-3d;
-            transition: all 0.5s ease;
+            transition: transform 0.5s, box-shadow 0.5s;
+            will-change: transform;
             perspective: 1000px;
         }
         
         .card-3d:hover {
-            transform: perspective(1000px) rotateY(10deg) rotateX(5deg) translateY(-10px) translateZ(20px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: perspective(1000px) rotateY(8deg) rotateX(4deg) scale(1.04);
+            box-shadow: 0 24px 48px rgba(108,99,255,0.25), 0 0 24px #6c63ff;
+            border-color: var(--primary);
         }
         
         /* Glassmorphism Effect */
@@ -174,18 +198,79 @@
             border-radius: 50%;
             background: var(--primary);
             box-shadow: 0 0 10px rgba(108, 99, 255, 0.8);
+            animation: pulseGlow 2s infinite alternate;
         }
         
         /* Photo Gallery */
         .gallery-item {
-            transition: all 0.3s ease;
+            transition: 
+                transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.4s ease,
+                filter 0.3s ease;
             transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+            perspective: 1000px;
+            will-change: transform, box-shadow, filter;
         }
         
         .gallery-item:hover {
-            transform: scale(1.05) rotateY(5deg) rotateX(5deg);
-            z-index: 10;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            transform: 
+                scale(1.15) 
+                rotateY(10deg) 
+                rotateX(8deg)
+                translateZ(20px);
+            z-index: 20;
+            box-shadow: 
+                0 30px 60px rgba(108, 99, 255, 0.4),
+                0 0 30px rgba(108, 99, 255, 0.3);
+            filter: brightness(1.1) contrast(1.05);
+        }
+
+        .gallery-item img {
+            transition: all 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.7) 100%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-item div {
+            position: relative;
+            z-index: 2;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            opacity: 0.8;
+        }
+
+        .gallery-item:hover div {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .gallery-item h3 {
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover h3 {
+            color: white;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
         
         /* Contact Form */
@@ -235,6 +320,33 @@
         .nav-link.active:after {
             width: 100%;
         }
+
+        /* Navigation Hover Card */
+        .nav-hover-card {
+            position: absolute;
+            left: 50%;
+            top: 120%;
+            transform: translateX(-50%);
+            min-width: 140px;
+            background: rgba(44, 44, 66, 0.95);
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s, transform 0.2s;
+            z-index: 100;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover .nav-hover-card,
+        .nav-link.active .nav-hover-card {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(-50%) translateY(8px) scale(1.05);
+        }
         
         /* Modal */
         .modal {
@@ -250,6 +362,37 @@
             visibility: visible;
         }
         
+        /* Pulse and glow for icons and cards */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 8px #6c63ff, 0 0 0px #ff6584; }
+            100% { box-shadow: 0 0 24px #ff6584, 0 0 16px #6c63ff; }
+        }
+        .timeline-dot,
+        .journey-item .text-4xl,
+        .card-3d .text-5xl {
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        
+        /* Glowing border on hover for cards */
+        .card-3d:hover {
+            box-shadow: 0 0 32px 8px #6c63ff, 0 0 16px 4px #ff6584;
+            border-color: #ff6584;
+        }
+        
+        /* Animated gradient for headings */
+        .animated-gradient {
+            background: linear-gradient(90deg, #6c63ff, #ff6584, #6c63ff);
+            background-size: 200% 200%;
+            animation: gradientMove 3s linear infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .hero-content {
@@ -274,15 +417,15 @@
     <!-- Navigation -->
     <nav class="fixed top-0 left-0 w-full z-50 glass py-4 px-6 shadow-lg transform transition-all duration-500 hover:rotate-x-3 hover:rotate-y-3 hover:translate-z-10" style="transform-style: preserve-3d;">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
-            <a href="#" class="text-2xl font-bold text-3d hover:text-purple-400 transition-all duration-300">ALZU SHARMA</a>
+            <a href="#" class="text-2xl font-bold text-3d hover:text-purple-400 transition-all duration-300 mouse-follow" data-strength="3">ALZU SHARMA</a>
             
             <div class="hidden md:flex space-x-8">
-                <a href="#home" class="nav-link active hover:text-purple-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Home</a>
-                <a href="#about" class="nav-link hover:text-blue-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">About Me</a>
-                <a href="#journey" class="nav-link hover:text-pink-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">My Journey</a>
-                <a href="#education" class="nav-link hover:text-green-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Education</a>
-                <a href="#gallery" class="nav-link hover:text-yellow-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Gallery</a>
-                <a href="#contact" class="nav-link hover:text-red-400 hover:scale-105 transition-all duration-300 transform hover:-translate-y-1">Contact</a>
+                <a href="#home" class="nav-link active hover:text-purple-400 hover:scale-110 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:bg-gradient-to-r from-purple-900/20 to-transparent hover:px-4 hover:py-2 hover:rounded-full hover:shadow-lg hover:shadow-purple-500/30">Home</a>
+                <a href="#about" class="nav-link hover:text-blue-400 hover:scale-110 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:bg-gradient-to-r from-blue-900/20 to-transparent hover:px-4 hover:py-2 hover:rounded-full hover:shadow-lg hover:shadow-blue-500/30">About Me</a>
+                <a href="#journey" class="nav-link hover:text-pink-400 hover:scale-110 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:bg-gradient-to-r from-pink-900/20 to-transparent hover:px-4 hover:py-2 hover:rounded-full hover:shadow-lg hover:shadow-pink-500/30">My Journey</a>
+                <a href="#education" class="nav-link hover:text-green-400 hover:scale-110 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:bg-gradient-to-r from-green-900/20 to-transparent hover:px-4 hover:py-2 hover:rounded-full hover:shadow-lg hover:shadow-green-500/30">Education</a>
+                <a href="#gallery" class="nav-link hover:text-yellow-400 hover:scale-110 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:bg-gradient-to-r from-yellow-900/20 to-transparent hover:px-4 hover:py-2 hover:rounded-full hover:shadow-lg hover:shadow-yellow-500/30">Gallery</a>
+                <a href="#contact" class="nav-link hover:text-red-400 hover:scale-110 transition-all duration-500 transform hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:bg-gradient-to-r from-red-900/20 to-transparent hover:px-4 hover:py-2 hover:rounded-full hover:shadow-lg hover:shadow-red-500/30">Contact</a>
             </div>
             
             <button id="mobile-menu-button" class="md:hidden text-xl">
@@ -307,29 +450,32 @@
     <section id="home" class="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
         <div class="max-w-7xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center justify-between">
             <div class="hero-content flex flex-col md:flex-row items-center w-full">
-                <div class="profile-img-container mb-10 md:mb-0 md:mr-10">
+                <div class="profile-img-container mb-10 md:mb-0 md:mr-10 mouse-follow" data-strength="15" data-rotate>
                     <div class="relative w-64 h-64 rounded-full overflow-hidden border-4 border-white border-opacity-20 profile-img floating transform rotate-6 hover:rotate-12 transition-transform duration-500">
                         <img src="photo.jpg" alt="Alzu Sharma" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-30"></div>
                     </div>
                 </div>
                 
-                <div class="text-center md:text-left max-w-2xl">
-                    <h1 class="text-5xl md:text-7xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 transform transition-all duration-500 hover:scale-105 hover:rotate-1 hover:skew-y-2 hover:text-shadow-lg hover:bg-gradient-to-l">Alzu Sharma</h1>
+                <div class="text-center md:text-left max-w-2xl mouse-follow" data-strength="3">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 transform transition-all duration-500 hover:scale-105 hover:rotate-1 hover:skew-y-2 hover:text-shadow-lg hover:bg-gradient-to-l mouse-follow" data-strength="8">Alzu Sharma</h1>
                     <div class="text-xl md:text-2xl mb-6">
-                        <span class="typing-text text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 transform transition-all duration-300 hover:scale-110 hover:rotate-1 hover:skew-x-3"></span>
+                        <span class="typing-text text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-teal-400 transform transition-all duration-300 hover:scale-110 hover:rotate-1 hover:skew-x-3 mouse-follow" data-strength="5"></span>
                     </div>
-                    <p class="text-lg mb-8 text-gray-300">Passionate educator with a vision to inspire and transform lives through learning.</p>
+                    <p class="text-lg mb-8 text-gray-300 mouse-follow" data-strength="2">Passionate educator with a vision to inspire and transform lives through learning.</p>
                     
                     <div class="flex flex-wrap justify-center md:justify-start gap-4">
-                        <button class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-medium hover:from-purple-700 hover:to-blue-600 transition-all transform hover:scale-105 shadow-lg">
-                            <i class="fas fa-envelope mr-2"></i> Hire Me
+                        <button class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded-full font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:shadow-2xl hover:shadow-purple-500/50 group">
+                            <i class="fas fa-envelope mr-2 transition-all duration-500 group-hover:rotate-12 group-hover:scale-125"></i> 
+                            <span class="transition-all duration-500 group-hover:tracking-wider">Hire Me</span>
                         </button>
-                        <button class="px-6 py-3 glass rounded-full font-medium hover:bg-opacity-30 transition-all transform hover:scale-105 shadow-lg">
-                            <i class="fas fa-download mr-2"></i> Download CV
+                        <button class="px-6 py-3 glass rounded-full font-medium hover:bg-opacity-30 transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:shadow-2xl hover:shadow-white/20 group">
+                            <i class="fas fa-download mr-2 transition-all duration-500 group-hover:rotate-12 group-hover:scale-125"></i> 
+                            <span class="transition-all duration-500 group-hover:tracking-wider">Download CV</span>
                         </button>
-                        <button onclick="scrollToSection('journey')" class="px-6 py-3 glass rounded-full font-medium hover:bg-opacity-30 transition-all transform hover:scale-105 shadow-lg">
-                            <i class="fas fa-compass mr-2"></i> Explore Journey
+                        <button onclick="scrollToSection('journey')" class="px-6 py-3 glass rounded-full font-medium hover:bg-opacity-30 transition-all duration-500 transform hover:scale-110 hover:-translate-y-2 hover:rotate-1 hover:skew-x-3 hover:shadow-2xl hover:shadow-white/20 group">
+                            <i class="fas fa-compass mr-2 transition-all duration-500 group-hover:rotate-180 group-hover:scale-125"></i> 
+                            <span class="transition-all duration-500 group-hover:tracking-wider">Explore Journey</span>
                         </button>
                     </div>
                 </div>
@@ -349,8 +495,12 @@
             <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 transform transition-all duration-500 hover:scale-110 hover:rotate-1 hover:skew-y-3 hover:text-shadow-xl">About Me</h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="card-3d glass p-8 rounded-3xl">
-                    <h3 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Who Am I?</h3>
+                <div class="card-3d glass p-8 rounded-3xl mouse-follow group" data-strength="5" data-rotate>
+                    <h3 class="text-2xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 transform transition-all duration-500 hover:scale-110 hover:rotate-2 hover:skew-y-3 hover:text-shadow-xl">
+                        <span class="inline-block transition-all duration-500 group-hover:translate-x-2">Who</span> 
+                        <span class="inline-block transition-all duration-500 group-hover:-translate-x-1">Am</span> 
+                        <span class="inline-block transition-all duration-500 group-hover:translate-y-1">I?</span>
+                    </h3>
                     <p class="text-lg mb-6">I am a very passionate girl with an insatiable curiosity about the world around me. As an educator, I believe in the transformative power of learning and the profound impact a teacher can have on shaping young minds.</p>
                     <p class="text-lg mb-6">My journey has been one of continuous growth, exploration, and self-discovery. I see teaching not just as a profession, but as a calling to inspire and nurture the next generation of thinkers and leaders.</p>
                     <p class="text-lg">"A teacher not only teaches but builds the future." This philosophy guides everything I do in my professional and personal life.</p>
@@ -409,7 +559,7 @@
     <!-- My Journey Section -->
     <section id="journey" class="py-20 relative overflow-hidden">
         <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-4xl  md:text-5xl font-bold mb-16 text-center text-3d hover:scale-105">My Journey</h2>
+            <h2 class="text-4xl  md:text-5xl font-bold mb-16 text-center animated-gradient">My Journey</h2>
             
             <div class="relative">
                 <div class="absolute left-1/2 top-0 h-full w-1 bg-gradient-to-b from-purple-500 to-blue-500 transform -translate-x-1/2"></div>
@@ -418,7 +568,7 @@
                     <!-- Journey Item 1 -->
                     <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right md:pr-8 mb-6 md:mb-0">
-                            <div class="inline-block glass p-6 rounded-2xl">
+                            <div class="inline-block card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <h3 class="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Early Inspiration</h3>
                                 <p class="text-gray-300">My passion for teaching began early, inspired by my own teachers who saw potential in me that I didn't yet see in myself.</p>
                             </div>
@@ -427,7 +577,7 @@
                         <div class="hidden md:block h-6 w-6 rounded-full bg-purple-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
                         
                         <div class="md:pl-8">
-                            <div class="glass p-6 rounded-2xl">
+                            <div class="card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <div class="text-4xl text-purple-400 mb-4">
                                     <i class="fas fa-seedling"></i>
                                 </div>
@@ -439,7 +589,7 @@
                     <!-- Journey Item 2 -->
                     <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right md:pr-8 mb-6 md:mb-0">
-                            <div class="inline-block glass p-6 rounded-2xl">
+                            <div class="inline-block card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Formal Education</h3>
                                 <p class="text-gray-300">Pursued my academic journey with dedication, completing my SEE, +2 Science, and BBS while developing my teaching philosophy.</p>
                             </div>
@@ -448,7 +598,7 @@
                         <div class="hidden md:block h-6 w-6 rounded-full bg-blue-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
                         
                         <div class="md:pl-8">
-                            <div class="glass p-6 rounded-2xl">
+                            <div class="card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <div class="text-4xl text-blue-400 mb-4">
                                     <i class="fas fa-graduation-cap"></i>
                                 </div>
@@ -460,7 +610,7 @@
                     <!-- Journey Item 3 -->
                     <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right md:pr-8 mb-6 md:mb-0">
-                            <div class="inline-block glass p-6 rounded-2xl">
+                            <div class="inline-block card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Montessori Training</h3>
                                 <p class="text-gray-300">Completed comprehensive Montessori training at Excellence Montessori, mastering child-centered educational approaches.</p>
                             </div>
@@ -469,7 +619,7 @@
                         <div class="hidden md:block h-6 w-6 rounded-full bg-green-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
                         
                         <div class="md:pl-8">
-                            <div class="glass p-6 rounded-2xl">
+                            <div class="card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <div class="text-4xl text-green-400 mb-4">
                                     <i class="fas fa-child"></i>
                                 </div>
@@ -481,7 +631,7 @@
                     <!-- Journey Item 4 -->
                     <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right md:pr-8 mb-6 md:mb-0">
-                            <div class="inline-block glass p-6 rounded-2xl">
+                            <div class="inline-block card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-red-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Teaching Experience</h3>
                                 <p class="text-gray-300">Applied my knowledge and training in real classroom settings, discovering the joys and challenges of guiding young minds.</p>
                             </div>
@@ -490,7 +640,7 @@
                         <div class="hidden md:block h-6 w-6 rounded-full bg-yellow-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
                         
                         <div class="md:pl-8">
-                            <div class="glass p-6 rounded-2xl">
+                            <div class="card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <div class="text-4xl text-yellow-400 mb-4">
                                     <i class="fas fa-chalkboard-teacher"></i>
                                 </div>
@@ -502,7 +652,7 @@
                     <!-- Journey Item 5 -->
                     <div class="journey-item relative pl-8 md:pl-0 md:grid md:grid-cols-2 gap-8 items-center">
                         <div class="md:text-right md:pr-8 mb-6 md:mb-0">
-                            <div class="inline-block glass p-6 rounded-2xl">
+                            <div class="inline-block card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-green-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">Future Vision</h3>
                                 <p class="text-gray-300">Continuing to grow as an educator while exploring innovative teaching methods and expanding my impact.</p>
                             </div>
@@ -511,7 +661,7 @@
                         <div class="hidden md:block h-6 w-6 rounded-full bg-pink-500 absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 shadow-lg"></div>
                         
                         <div class="md:pl-8">
-                            <div class="glass p-6 rounded-2xl">
+                            <div class="card-3d glass p-6 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-purple-400 transition-all duration-500">
                                 <div class="text-4xl text-pink-400 mb-4">
                                     <i class="fas fa-rocket"></i>
                                 </div>
@@ -535,7 +685,7 @@
                     <!-- SEE -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="card-3d glass p-8 rounded-2xl">
+                        <div class="card-3d glass p-8 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-blue-400 transition-all duration-500">
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1">SEE</h3>
                                 <span class="text-purple-300">Pashupati Vidhya Asharam , Narayanpur 10 , Dang Nepal</span>
@@ -547,7 +697,7 @@
                     <!-- +2 Science -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="card-3d glass p-8 rounded-2xl">
+                        <div class="card-3d glass p-8 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-blue-400 transition-all duration-500">
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-500">+2 Science</h3>
                                 <span class="text-blue-300">Padmodaya Public Model School, Ghorahi-15 Bharatpur ,Dang Nepal</span>
@@ -559,7 +709,7 @@
                     <!-- BBS -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="card-3d glass p-8 rounded-2xl">
+                        <div class="card-3d glass p-8 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-blue-400 transition-all duration-500">
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-teal-500">Bachelor of Business Studies (BBS)</h3>
                                 <span class="text-green-300">Mahendra Multiple Campus ,Ghorahi-15 Bharatpur ,Dang Nepal</span>
@@ -571,7 +721,7 @@
                     <!-- Montessori Training -->
                     <div class="timeline-item">
                         <div class="timeline-dot"></div>
-                        <div class="card-3d glass p-8 rounded-2xl">
+                        <div class="card-3d glass p-8 rounded-2xl hover:shadow-2xl hover:border-2 hover:border-blue-400 transition-all duration-500">
                             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                                 <h3 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Montessori Training</h3>
                                 <span class="text-yellow-300">Excellence Montessori, Ghorahi Dang Nepal</span>
@@ -646,20 +796,20 @@
             
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 <!-- Gallery Item 1 -->
-                <div class="gallery-item rounded-xl overflow-hidden glass">
-                    <img src="photo7.jpg" alt="Chiya Bari" class="w-full h-64 object-cover">
-                    <div class="p-4">
-                        <h3 class="font-bold">Ilam Chiya Bari</h3>
-                        <p class="text-sm text-gray-300">Engaging with Ilam</p>
+                <div class="gallery-item rounded-xl overflow-hidden glass mouse-follow group" data-strength="8" data-rotate>
+                    <img src="photo7.jpg" alt="Chiya Bari" class="w-full h-64 object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-2">
+                    <div class="p-4 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent">
+                        <h3 class="font-bold text-white text-xl">Ilam Chiya Bari</h3>
+                        <p class="text-sm text-gray-200">Engaging with Ilam</p>
                     </div>
                 </div>
                 
                 <!-- Gallery Item 2 -->
                 <div class="gallery-item rounded-xl overflow-hidden glass">
                     <img src="photo1.jpg" alt="Garden" class="w-full h-64 object-cover">
-                    <div class="p-4">
-                        <h3 class="font-bold">Park Visit</h3>
-                        <p class="text-sm text-gray-300">Sitting in a green park peaceful, refreshing, and filled with the calm energy of nature</p>
+                    <div class="p-4 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent">
+                        <h3 class="font-bold text-white text-xl">Park Visit</h3>
+                        <p class="text-sm text-gray-200">Sitting in a green park peaceful, refreshing, and filled with the calm energy of nature</p>
                     </div>
                 </div>
                 
@@ -728,7 +878,7 @@
             <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center text-3d hover:scale-105">Get In Touch</h2>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="card-3d glass p-8 rounded-2xl">
+                <div class="card-3d glass p-8 rounded-2xl mouse-follow" data-strength="4" data-rotate>
                     <h3 class="text-2xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1 hover:skew-y-3">Contact Information</h3>
                     
                     <div class="space-y-6">
@@ -766,8 +916,8 @@
                     <div class="mt-10">
                         <h4 class="font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">Connect With Me</h4>
                         <div class="flex space-x-6">
-                            <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
-                                <i class="fab fa-facebook hover:text-white"></i>
+                            <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 transform hover:scale-125 hover:rotate-12 hover:skew-x-3 hover:skew-y-3 hover:-translate-y-3 transition-all duration-500 group">
+                                <i class="fab fa-facebook transition-all duration-500 group-hover:text-white group-hover:rotate-y-180"></i>
                             </a>
                             <a href="#" class="social-icon text-4xl p-3 rounded-full bg-gradient-to-br from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
                                 <i class="fab fa-twitter hover:text-white"></i>
@@ -786,9 +936,9 @@
                     <h3 class="text-2xl font-bold mb-6">Send Me a Message</h3>
                     
                     <form id="contact-form" class="space-y-6">
-                        <div>
-                            <label for="name" class="block mb-2">Your Name</label>
-                            <input type="text" id="name" class="w-full contact-input px-4 py-3 rounded-lg" required>
+                        <div class="group">
+                            <label for="name" class="block mb-2 transition-all duration-500 group-hover:text-purple-400 group-hover:translate-x-2 group-hover:scale-105">Your Name</label>
+                            <input type="text" id="name" class="w-full contact-input px-4 py-3 rounded-lg transition-all duration-500 hover:scale-105 hover:-translate-y-1 hover:shadow-lg hover:shadow-purple-500/30 focus:scale-105 focus:-translate-y-1 focus:shadow-lg focus:shadow-purple-500/50" required>
                         </div>
                         
                         <div>
@@ -828,7 +978,7 @@
                 </a>
             </div>A
             
-            <p class="mb-6 text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-yellow-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1 hover:skew-y-3">"Education is the most powerful weapon which you can use to change the world." - Nelson Mandela</p>
+            <p class="mb-6 text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-yellow-500 transform transition-all duration-300 hover:scale-105 hover:rotate-1 hover:skew-y-3 mouse-follow" data-strength="2">"Education is the most powerful weapon which you can use to change the world." - Nelson Mandela</p>
             
             <p class="text-gray-400">© 2023 Alzu Sharma. All rights reserved.</p>
             
@@ -873,6 +1023,81 @@
     
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
+        // Enhanced Mouse Movement Tracking with Smooth Interpolation
+        let mouseX = 0, mouseY = 0;
+        let targetX = 0, targetY = 0;
+        let lastMouseX = 0, lastMouseY = 0;
+        let velocityX = 0, velocityY = 0;
+        const elements = document.querySelectorAll('.mouse-follow');
+        const lerpFactor = 0.1; // Smoothing factor (lower = smoother)
+        
+        function updateMousePosition(e) {
+            targetX = (e.clientX / window.innerWidth - 0.5) * 2;
+            targetY = (e.clientY / window.innerHeight - 0.5) * 2;
+            
+            // Calculate velocity with smoothing
+            velocityX = targetX - lastMouseX;
+            velocityY = targetY - lastMouseY;
+            lastMouseX = targetX;
+            lastMouseY = targetY;
+        }
+        
+        function animateElements() {
+            // Smooth interpolation for mouse position
+            mouseX += (targetX - mouseX) * lerpFactor;
+            mouseY += (targetY - mouseY) * lerpFactor;
+            
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const elCenterX = rect.left + rect.width/2;
+                const elCenterY = rect.top + rect.height/2;
+                
+                const distanceX = (mouseX * window.innerWidth/2 + window.innerWidth/2) - elCenterX;
+                const distanceY = (mouseY * window.innerHeight/2 + window.innerHeight/2) - elCenterY;
+                const distance = Math.sqrt(distanceX*distanceX + distanceY*distanceY);
+                
+                const strength = parseFloat(el.getAttribute('data-strength')) || 10;
+                const rotate = el.hasAttribute('data-rotate') ? 8 : 0;
+                const scaleFactor = 1 + (Math.abs(velocityX) + Math.abs(velocityY)) * 0.1;
+                
+                // Dynamic parallax effect
+                const parallaxFactor = 0.5 + (1 - Math.min(distance / 1000, 0.8));
+                
+                // Apply transformations with smooth interpolation
+                el.style.transform = `
+                    translate(
+                        ${mouseX * strength * parallaxFactor}px, 
+                        ${mouseY * strength * parallaxFactor}px
+                    )
+                    rotateX(${mouseY * rotate * parallaxFactor * 0.5}deg)
+                    rotateY(${-mouseX * rotate * parallaxFactor}deg)
+                    scale(${scaleFactor})
+                `;
+                
+                // Dynamic glow effect
+                const glowIntensity = Math.min((Math.abs(velocityX) + Math.abs(velocityY)) * 10, 1.5);
+                el.style.filter = `
+                    drop-shadow(0 0 ${glowIntensity * 15}px rgba(108, 99, 255, ${glowIntensity * 0.6}))
+                    brightness(${1 + glowIntensity * 0.2})
+                `;
+                
+                // Subtle color shift based on position
+                const hueRotate = mouseX * 10;
+                el.style.setProperty('--hue-rotate', `${hueRotate}deg`);
+            });
+            
+            requestAnimationFrame(animateElements);
+        }
+        
+        document.addEventListener('mousemove', updateMousePosition);
+        
+        // Start animation loop
+        document.addEventListener('mousemove', updateMousePosition);
+        animateElements();
+        
+        // Add CSS variable for hue rotation
+        document.documentElement.style.setProperty('--hue-rotate', '0deg');
+
         // Initialize particles.js
         document.addEventListener('DOMContentLoaded', function() {
             // Typing Animation
@@ -999,8 +1224,46 @@
                 });
             });
             
-            // Initialize particles.js
+            // Enhanced particles.js with more interactivity
             particlesJS('particles-js', {
+                "interactivity": {
+                    "detect_on": "window",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "bubble",
+                            "parallax": {
+                                "enable": true,
+                                "force": 60,
+                                "smooth": 30
+                            }
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "bubble": {
+                            "distance": 200,
+                            "size": 20,
+                            "duration": 2,
+                            "opacity": 0.8,
+                            "speed": 3
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 10
+                        },
+                        "remove": {
+                            "particles_nb": 5
+                        }
+                    }
+                },
                 "particles": {
                     "number": {
                         "value": 80,
@@ -1106,64 +1369,119 @@
                 "retina_detect": true
             });
             
-            // GSAP Animations
+            // Enhanced GSAP Animations with more effects
             gsap.registerPlugin(ScrollTrigger);
             
-            // Animate sections on scroll
+            // Add floating animation to hero elements
+            gsap.to(".hero-content", {
+                y: 20,
+                duration: 3,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            // Add continuous rotation to some elements
+            gsap.to(".floating", {
+                rotation: 5,
+                duration: 10,
+                repeat: -1,
+                yoyo: true,
+                ease: "none"
+            });
+            
+            // Add color cycling animation
+            gsap.to(".animated-gradient", {
+                backgroundPosition: "200% center",
+                duration: 8,
+                repeat: -1,
+                ease: "linear"
+            });
+            
+            // Animate sections on scroll with scale and rotation
             gsap.utils.toArray('section').forEach(section => {
                 gsap.from(section, {
                     scrollTrigger: {
                         trigger: section,
-                        start: "top 80%",
+                        start: "top 85%",
                         toggleActions: "play none none none"
                     },
                     opacity: 0,
-                    y: 50,
-                    duration: 1
+                    y: 80,
+                    scale: 0.95,
+                    rotateX: 10,
+                    duration: 1.2,
+                    ease: "power2.out"
                 });
             });
             
-            // Animate journey items
+            // Animate journey items with bounce and color
             gsap.utils.toArray('.journey-item').forEach((item, i) => {
                 gsap.from(item, {
                     scrollTrigger: {
                         trigger: item,
-                        start: "top 80%",
+                        start: "top 90%",
                         toggleActions: "play none none none"
                     },
                     opacity: 0,
-                    x: i % 2 === 0 ? -50 : 50,
-                    duration: 0.8,
-                    delay: i * 0.1
+                    x: i % 2 === 0 ? -80 : 80,
+                    scale: 0.9,
+                    rotateY: i % 2 === 0 ? -15 : 15,
+                    duration: 1.1,
+                    ease: "bounce.out",
+                    delay: i * 0.15
                 });
             });
             
-            // Animate timeline items
+            // Animate timeline items with elastic effect
             gsap.utils.toArray('.timeline-item').forEach((item, i) => {
                 gsap.from(item, {
                     scrollTrigger: {
                         trigger: item,
-                        start: "top 80%",
+                        start: "top 90%",
                         toggleActions: "play none none none"
                     },
                     opacity: 0,
-                    y: 50,
-                    duration: 0.8,
-                    delay: i * 0.1
+                    y: 60,
+                    scale: 0.9,
+                    rotateX: 12,
+                    duration: 1.1,
+                    ease: "elastic.out(1, 0.5)",
+                    delay: i * 0.12
                 });
             });
             
-            // Animate gallery items
+            // Animate gallery items with stagger and scale
             gsap.utils.toArray('.gallery-item').forEach((item, i) => {
                 gsap.from(item, {
                     scrollTrigger: {
                         trigger: item,
-                        start: "top 80%",
+                        start: "top 95%",
                         toggleActions: "play none none none"
                     },
                     opacity: 0,
-                    scale: 0.8,
-                    duration: 0.5,
+                    scale: 0.7,
+                    rotate: 8,
+                    duration: 0.7,
+                    ease: "back.out(1.7)",
+                    delay: i * 0.07
+                });
+            });
+            
+            // Animate teaching skills cards
+            gsap.utils.toArray('.card-3d').forEach((card, i) => {
+                gsap.from(card, {
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 95%",
+                        toggleActions: "play none none none"
+                    },
+                    opacity: 0,
+                    y: 40,
+                    scale: 0.9,
+                    rotateY: 10,
+                    duration: 0.8,
+                    ease: "power1.out",
                     delay: i * 0.05
                 });
             });
